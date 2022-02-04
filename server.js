@@ -113,15 +113,15 @@ function addDepartment(){
       type: "input",
       message: "What Department would you like to add?"
     }
-  ]).then(function(res){
+  ]).then(function(val){
     db.query(`INSERT INTO department (department_name) VALUES (?)`, 
-    [res.name],
+    [val.name],
     function(err,res){
       if(err){
         throw err
       }
       console.log("Successfully added to Departments. View All Departments to see...");
-      console.table(res);
+      // console.table(res);
       prompt();
     })
   })
@@ -146,12 +146,13 @@ function addRole(){
       message: "Which department would you like to add this Role into?",
       choices: selectDepartment()
     }
-  ]).then(function(res){
+  ]).then(function(val){
+    var departmentID = selectDepartment().indexOf(val.department)+1;
     db.query(`INSERT INTO employee_role SET?`,
       {
-        title: res.title,
-        salary: res.salary,
-        department_id: res.department
+        title: val.title,
+        salary: val.salary,
+        department_id: departmentID
       },
       function(err,res){
         if(err){
