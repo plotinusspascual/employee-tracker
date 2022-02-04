@@ -28,7 +28,7 @@ How to view the project:
 2. Clone the project via HTTPS or SSH link found in my GitHub repo 
     https://github.com/plotinusspascual/employee-tracker
 3. After entering the command 'git clone [HTTPS/SSH Link]' in terminal, use command 'code .' to open the project in your default text editor
-4. Change directory so you are inside the team-profile-generator folder and run the following commands: 
+4. Change directory so you are inside the employee-tracker folder and run the following commands: 
 5. In terminal, use command "npm install" to install dependencies
 6. Use command "npm start" to run the application
 
