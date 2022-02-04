@@ -34,9 +34,9 @@ function prompt(){
       name: "choice",
       choices: 
       [
-        "View All Employees?",
-        "View All Employee's By Roles?",
-        "View All Employee's By Departments",
+        "View All Employees",
+        "View All Roles",
+        "View All Departments",
         "Update Employee",
         "Add Employee?",
         "Add Role?",
@@ -45,8 +45,13 @@ function prompt(){
     }
   ]).then(function(val){
     switch(val.choice){
-      case "View All Employees?":
+      case "View All Employees":
         viewEmployees();
+        break;
+
+      case"View All Roles":
+        viewRoles();
+        break;  
     }
   })
 }
@@ -59,7 +64,14 @@ function viewEmployees(){
       prompt();
   })
 }
-function viewRoles(){}
+function viewRoles(){
+  db.query(`SELECT id, title FROM employee_role`, function(err,res){
+    if(err)
+      throw err
+      console.table(res);
+      prompt();
+  })
+}
 function viewDepartments(){}
 function updateEmployee(){}
 function addEmployee(){}
