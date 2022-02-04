@@ -34,27 +34,31 @@ function prompt(){
       name: "choice",
       choices: 
       [
-        "View All Employees",
-        "View All Roles",
         "View All Departments",
-        "Update Employee",
-        "Add Employee?",
-        "Add Role?",
-        "Add Department?"   
+        "View All Roles",
+        "View All Employees",
+        "Add Department",
+        "Add Role",
+        "Add Employee",
+        "Update Employee"          
       ]
     }
   ]).then(function(val){
-    switch(val.choice){
-      case "View All Employees":
-        viewEmployees();
+    switch(val.choice){        
+      case "View All Departments":
+        viewDepartments();
         break;
-
       case "View All Roles":
         viewRoles();
         break; 
-        
-      case "View All Departments":
-        viewDepartments();
+      case "View All Employees":
+        viewEmployees();
+        break;
+      case "Add Department":
+        addDepartment();
+        break;
+      case "Add Role":
+        addRole();
         break;
     }
   })
@@ -84,7 +88,25 @@ function viewDepartments(){
       prompt();
   })
 }
-function updateEmployee(){}
-function addEmployee(){}
+function addDepartment(){
+  inquirer.prompt([
+    {
+      name: "name",
+      type: "input",
+      message: "What Department would you like to add?"
+    }
+  ]).then(function(res){
+    db.query(`INSERT INTO department (department_name) VALUES (?)`, 
+    [res.name],
+    function(err,res){
+      if(err){
+        throw err
+      }
+      console.log("Successfully added to Departments. View All Departments to see...");
+      prompt();
+    })
+  })
+}
 function addRole(){}
-function addDepartment(){}
+function addEmployee(){}
+function updateEmployee(){}
