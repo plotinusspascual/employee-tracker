@@ -60,6 +60,9 @@ function prompt(){
       case "Add Role":
         addRole();
         break;
+      case "Add Employee":
+        addEmployee();
+        break;
     }
   })
 }
@@ -146,5 +149,72 @@ function addRole(){
     )
   })
 }
-function addEmployee(){}
+function addEmployee(){
+  inquirer.prompt([
+    {
+      name: "first_name",
+      type: "input",
+      message: "What is the First Name?"
+    },
+    {
+      name: "last_name",
+      type: "input",
+      message: "What is the Last Name?"
+    },
+    {
+      name: "role",
+      type: "input",
+      message: "What is their Role",
+      choices: roleArray
+    },
+    {
+      name: "manager",
+      type: "input",
+      message: "Who is their Manager?",
+      choices: managerArray
+    }
+  ]).then(function(res){
+    db.query(`INSERT INTO employee SET?`,
+      {
+        first_name: res.first_name,
+        last_name: res.last_name,
+        role_id: res.role_id,
+        manager_id: res.manager_id
+      },
+      function(err,res){
+        if(err){
+          throw err
+        }
+        console.log("Successfully added to Employees. View All Employees to see...");
+        prompt();
+      }
+    )
+  })
+}
 function updateEmployee(){}
+
+var roleArray = [];
+function selectRole(){
+  db.query(`SELECT * FROM role`, function(err, res){
+    if(err)
+      throw err
+    
+    for(var i=0; i < res.length; i++){
+      roleArray.push(res[i].title);
+    }
+  })
+  return roleArray;
+}
+
+var managerArray = [];
+function selectManager(){
+  db.query(`SELECT first_name, last_name FROM employee WHERE manager_id is NULL`, function(err,res){
+    if(err)
+      throw err
+
+    for(var i=0; i < res.length; i++){
+      managerArray.push(res[i].first_name);
+    }
+  })
+  return managerArray;
+}
