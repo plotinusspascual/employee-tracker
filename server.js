@@ -25,6 +25,7 @@ const db = mysql.createConnection(
   prompt()
 );
 
+// Start of the prompt to ask Users what functions they would like to do
 function prompt(){
   inquirer.prompt([
     {
@@ -42,6 +43,7 @@ function prompt(){
         "Update Employee"          
       ]
     }
+// Depending on the user choice, each selection has it's own function that will run    
   ]).then(function(val){
     switch(val.choice){        
       case "View All Departments":
@@ -62,12 +64,20 @@ function prompt(){
       case "Add Employee":
         addEmployee();
         break;
+      case "Update Employee":
+        updateEmployee();
+        break;
     }
   })
 }
 
+// Prints out All Employees
 function viewEmployees(){
-  db.query(`SELECT id, first_name, last_name FROM employee`, function(err,res){
+  db.query(`SELECT employee.id, employee.first_name, employee.last_name, title, salary, department_name, manager.last_name AS manager
+      FROM employee
+      LEFT JOIN employee_role ON role_id = employee_role.id
+      LEFT JOIN department ON department_id = department.id
+      LEFT JOIN employee AS manager ON employee.manager_id = manager.id`, function(err,res){
     if(err)
       throw err
       console.table(res);
@@ -75,6 +85,7 @@ function viewEmployees(){
   })
 }
 
+// Prints out All Roles
 function viewRoles(){
   db.query(`SELECT id, title FROM employee_role`, function(err,res){
     if(err)
@@ -84,6 +95,7 @@ function viewRoles(){
   })
 }
 
+// Prints out All Departments
 function viewDepartments(){
   db.query(`SELECT id, department_name FROM department`, function(err,res){
     if(err)
@@ -93,6 +105,7 @@ function viewDepartments(){
   })
 }
 
+// Function to add a department with user input
 function addDepartment(){
   inquirer.prompt([
     {
@@ -114,6 +127,7 @@ function addDepartment(){
   })
 }
 
+// Creates and adds a role 
 function addRole(){
   inquirer.prompt([
     {
@@ -151,18 +165,7 @@ function addRole(){
   })
 }
 
-var roleArr = [];
-function selectRole() {
-  db.query("SELECT * FROM employee_role", function(err, res) {
-    if (err) throw err
-    for (var i = 0; i < res.length; i++) {
-      roleArr.push(res[i].title);
-    }
-
-  })
-  return roleArr;
-}
-
+// Creates and Add Employee
 function addEmployee(){
   inquirer.prompt([
     {
@@ -188,6 +191,7 @@ function addEmployee(){
       choices: selectManager()
     }
   ]).then(function(val){
+    // Index default start at 0, but ID's start at 1
     var roleID = selectRole().indexOf(val.role)+1;
     var managerID = selectManager().indexOf(val.manager)+1;
     db.query(`INSERT INTO employee SET?`,
@@ -207,36 +211,39 @@ function addEmployee(){
     )
   })
 }
-function updateEmployee(){}
+function updateEmployee(){
+  // db.query(`SELECT employee.last_name, role.title FROM employee JOIN employee_role ON employee.role_id = role.id`,
+  //   function(err,res){
+  //     if(err)
+  //       throw err
+  //     inquirer.prompt
+  //   }
+  // )
+}
 
 var departmentArray = [];
 function selectDepartment(){
   db.query(`SELECT * FROM department`, function(err, res){
     if(err)
       throw err
-
     for(var i=0; i < res.length; i++){
-      roleArray.push(res[i].department_name);
+      departmentArray.push(res[i].department_name);
     }
   })
-  console.log(departmentArray);
   return departmentArray;
 }
 
-
-// function selectRole(){
-//   roleArray = [];
-//   db.query(`SELECT id, title FROM employee_role`, function(err, res){
-//     if(err)
-//       throw err
-//     for(var i=0; i < res.length; i++){
-//       roleArray.push(res[i].id + res[i].title);
-//     }
-//   })
-//   return roleArray;
-// }
-// var test = selectRole();
-// console.log(test);
+var roleArr = [];
+function selectRole() {
+  db.query("SELECT * FROM employee_role", function(err, res) {
+    if (err) 
+      throw err
+    for (var i = 0; i < res.length; i++) {
+      roleArr.push(res[i].title);
+    }
+  })
+  return roleArr;
+}
 
 var managerArray = [];
 function selectManager(){
@@ -248,6 +255,5 @@ function selectManager(){
       managerArray.push(res[i].first_name);
     }
   })
-  console.log(managerArray);
   return managerArray;
 }
