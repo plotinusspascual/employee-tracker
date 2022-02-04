@@ -107,6 +107,44 @@ function addDepartment(){
     })
   })
 }
-function addRole(){}
+function addRole(){
+  inquirer.prompt([
+    {
+      name: "title",
+      type: "input",
+      message: "What Role would you like to add?"
+    },
+    {
+      name: "salary",
+      type: "input",
+      message: "What is the Salary?"
+    }
+    // ,
+    // {
+    //   name: "department",
+    //   type: "list",
+    //   message: "Which department would you like to add this Role into?",
+    //   choices: 
+    //     [
+    //       "Sales", "Engineering", "Finance", "Legal"
+    //     ]
+    // }
+  ]).then(function(res){
+    db.query(`INSERT INTO employee_role SET?`,
+      {
+        title: res.title,
+        salary: res.salary,
+        // department_id: res.department
+      },
+      function(err,res){
+        if(err){
+          throw err
+        }
+        console.log("Successfully added to Roles. View All Roles to see...");
+        prompt();
+      }
+    )
+  })
+}
 function addEmployee(){}
 function updateEmployee(){}
