@@ -49,9 +49,13 @@ function prompt(){
         viewEmployees();
         break;
 
-      case"View All Roles":
+      case "View All Roles":
         viewRoles();
-        break;  
+        break; 
+        
+      case "View All Departments":
+        viewDepartments();
+        break;
     }
   })
 }
@@ -72,7 +76,14 @@ function viewRoles(){
       prompt();
   })
 }
-function viewDepartments(){}
+function viewDepartments(){
+  db.query(`SELECT id, department_name FROM department`, function(err,res){
+    if(err)
+      throw err
+      console.table(res);
+      prompt();
+  })
+}
 function updateEmployee(){}
 function addEmployee(){}
 function addRole(){}
