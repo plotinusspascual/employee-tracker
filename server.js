@@ -11,9 +11,20 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () => console.log('Now listening'));
-});
+// Connect to database
+const db = mysql.createConnection(
+  {
+    host: 'localhost',
+    // MySQL username,
+    user: 'root',
+    // MySQL password
+    password: 'password',
+    database: 'employee_db'
+  },
+  console.log(`Connected to the employee_db database.`),
+  prompt()
+);
+
 
 function prompt(){
   inquirer.prompt([
@@ -34,13 +45,20 @@ function prompt(){
     }
   ]).then(function(val){
     switch(val.choice){
-      case "View All Employees":
+      case "View All Employees?":
         viewEmployees();
     }
   })
 }
 
-function viewEmployees(){}
+function viewEmployees(){
+  db.query(`SELECT id, first_name, last_name FROM employee`, function(err,res){
+    if(err)
+      throw err
+      console.table(res);
+      prompt();
+  })
+}
 function viewRoles(){}
 function viewDepartments(){}
 function updateEmployee(){}
