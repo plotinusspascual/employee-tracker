@@ -1,7 +1,7 @@
 # employee-tracker
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-# Team Profile Generator
+
 ## Table of Contents
 - [Description](#project-description)
 - [Installation](#installation)
